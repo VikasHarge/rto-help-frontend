@@ -1,25 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Webcam from 'react-webcam'
+import { Route, Routes } from 'react-router-dom';
+import PageNotFound from './pages/error/PageNotFound';
+import Login from './pages/Login/Login';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Complain from './pages/complain/Complain';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import ComplainDetail from './pages/complainDetail/ComplainDetail';
+
+
+
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Navbar/>
+    <Routes>
+      <Route path='/complain' element={<Complain/>} />
+      <Route path='/' element={<Login/>} />
+      <Route path="/admin/dashboard" element={<Dashboard/>} />
+      <Route path='/admin/complainDetail/:complainId' element={<ComplainDetail/>} />
+      <Route path="*" element={<PageNotFound/>} />
+    </Routes>
+    <Footer />
+    </>
+
   );
 }
 
 export default App;
+
+
+

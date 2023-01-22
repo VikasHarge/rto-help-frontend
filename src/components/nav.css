@@ -1,0 +1,25 @@
+.nav-container {
+    height: 8vh;
+    background-color: #443a39;
+    color: #ffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    z-index: 999;
+}
+
+.footer-container {
+    height: 8vh;
+    background-color: #443a39;
+    color: #ffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    z-index: 999 ;
+}

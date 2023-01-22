@@ -1,0 +1,171 @@
+.complain-detail-container {
+    width: 100%;
+    height: 84vh;
+    background-color: #968b89;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.complain-detail-div{
+    width: 90%;
+    height: 90%;
+    background-color: #675b5b;
+    border-radius: 1rem;
+    display: flex;
+}
+
+
+
+.detail_panel {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+.video_panel {
+    width: 100%;
+    height: 100%;
+    border-right: 3px dashed #968b89;
+    border-left: 3px dashed #968b89;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.map_panel {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+}
+
+.map_wrapper{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+.map_wrapper iframe {
+    width: 100%;
+    height: 80%;
+    border-radius: 1rem;
+}
+
+.complainId_header {
+    width: fit-content;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: red;
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: #443a39;
+    border-radius: 6px;
+}
+
+.videopanel_header {
+    width: fit-content;
+    margin-bottom: 1rem;
+    color: white;
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: #443a39;
+    border-radius: 6px;
+}
+
+.backButton {
+    border: none;
+    position: absolute;
+    padding: 6px 12px;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #443a39;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0.5rem;
+    /* left: 0; */
+}
+
+.backButton:hover {
+    background-color: #443a99;
+}
+
+
+.complain-detail-table {
+    width: 100%;
+    height: 75%;
+    overflow-y: scroll;
+}
+
+.detailTable {
+    width: 100%;
+    font-size: 1rem;
+    color: rgb(35, 35, 35);
+    font-weight: 600;
+}
+
+.detailTable th {
+    position: sticky;
+    top: 0;
+}
+
+.detailTable td, th {
+    padding: 6px;
+}
+.detailTable th {
+    background-color: #443a39;
+    color: #fff;
+}
+
+.detailTable tr:nth-child(even){
+    background-color: #c6c6c6;
+}
+
+.detailTable tr:nth-child(odd){
+    background-color: #ffffff;
+}
+
+.remark_div {
+    width: 100%;
+    height: auto;
+
+}
+.remark_div textarea {
+    width: 100%;
+    margin-top: 0.5rem;
+    height: 4rem;
+    padding: 8px;
+}
+
+.detail-btn-container {
+    width: 100%;
+    height: fit-content;
+}
+
+.detail-btn-container button {
+    border: 2px solid transparent;
+    padding: 6px;
+    background-color: green;
+    color: #ffff;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: 0.4s all;
+    cursor: pointer;
+}
+
+.detail-btn-container button:hover{
+    background-color: #ffff;
+    border: 2px solid green;
+    color: green;
+}
+
+.remark_submit_tag {
+    margin-top: 1rem;
+    color: green;
+    background-color: #fff;
+    padding: 8px;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 8px;
+}
