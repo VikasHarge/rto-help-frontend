@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import complainReducer from '../feature/complain/complainSlice'
 import complainDetailReducer from '../feature/complain/complainDetailSlice';
+import userReducer from '../feature/user/userSlice'
 
 
 
@@ -10,7 +11,8 @@ const store = configureStore({
     //Reducers
     reducer : {
         complain : complainReducer,
-        complainDetail : complainDetailReducer
+        complainDetail : complainDetailReducer,
+        userDetails : userReducer
     }
 })
 

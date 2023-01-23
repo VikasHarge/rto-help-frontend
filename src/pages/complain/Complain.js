@@ -4,6 +4,7 @@ import Webcam from "react-webcam";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import axios from "axios";
 
 function Complain() {
   const mainCamRef = useRef(null);
@@ -37,6 +38,8 @@ function Complain() {
   }, []);
 
   const handleStartCaptureClick = useCallback(() => {
+    // const img = mainCamRef.current.getScreenshot();
+    // console.log(img);
     setCapturing(true);
     SetIsVideoInfo(false);
     setDucration(0);
@@ -70,9 +73,9 @@ function Complain() {
       if (data.size > 0) {
         setRecordedChunks((prev) => prev.concat(data));
       }
-    },
-    [setRecordedChunks]
-  );
+    },[setRecordedChunks]);
+
+
   const handleFrontDataAvailable = useCallback(
     ({ data }) => {
       if (data.size > 0) {
@@ -86,51 +89,66 @@ function Complain() {
 
   const handleStopCapture = useCallback(() => {
     mediaRecorderRef.current.stop();
-    frontMediaRecorderRef.current.stop();
+    frontMediaRecorderRef.current.stop();  
     setCapturing(false);
     SetIsVideoInfo(true);
     clearInterval(durInterval);
   }, [mediaRecorderRef, setCapturing]);
 
   const handleSubmit = useCallback(() => {
-    console.log(long);
-    console.log(lati);
 
     if (recordedChunks.length) {
       const blob = new Blob(recordedChunks, {
-        type: "video/mp4"
+        type: "video/webm"
       });
-      console.log(recordedChunks);
+      // console.log(recordedChunks);
 
       const url = URL.createObjectURL(blob);
 
-      setUrls(url);
+      axios({
+        method : 'get',
+        url : url,
+        responseType : 'blob'
+      }).then(function(res){
+        var reader = new FileReader()
+        reader.readAsDataURL(res.data);
+        reader.onload = function (){
+          var base64data = reader.result
+          console.log(base64data);
+        }
+      })
 
-      console.log(url);
+      // setUrls(url);
+      console.log(typeof url);
 
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display:none";
-      a.href = url;
-      a.download = "";
-      a.click();
+
+
+      // const a = document.createElement("a");
+      // document.body.appendChild(a);
+      // a.style = "display:none";
+      // a.href = url;
+      // a.download = "";
+      // a.click();
       window.URL.revokeObjectURL(url);
+      // console.log("new data", blob);
       setRecordedChunks([]);
     }
-    if (frontRecordedChunks.length) {
-      const frontBlob = new Blob(frontRecordedChunks, {
-        type: "video/webm"
-      });
-      const frontUrl = URL.createObjectURL(frontBlob);
-      const b = document.createElement("a");
-      document.body.appendChild(b);
-      b.style = "display:none";
-      b.href = frontUrl;
-      b.download = "front_complainer";
-      b.click();
-      window.URL.revokeObjectURL(frontUrl);
-      setFrontRecordedChunks([]);
-    }
+    // if (frontRecordedChunks.length) {
+    //   const frontBlob = new Blob(frontRecordedChunks, {
+    //     type: "video/webm"
+    //   });
+    //   console.log(frontBlob);
+    //   const frontUrl = URL.createObjectURL(frontBlob);
+
+    //   const b = document.createElement("a");
+    //   document.body.appendChild(b);
+    //   b.style = "display:none";
+    //   b.href = frontUrl;
+    //   b.download = "front_complainer";
+    //   b.click();
+    //   window.URL.revokeObjectURL(frontUrl);
+    //   setFrontRecordedChunks([]);
+    // }
   }, [recordedChunks, frontRecordedChunks]);
 
   useEffect(() => {
@@ -139,7 +157,7 @@ function Complain() {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position);
+      // console.log(position);
       setLong(position.coords.latitude);
       setLati(position.coords.longitude);
     });
@@ -150,11 +168,13 @@ function Complain() {
       <div className="container">
         <div className="video-container">
           <Webcam
+            imageSmoothing = {true}
             ref={mainCamRef}
             audio={false}
             videoConstraints={{
               width: 500,
-              facingMode: "environment"
+              facingMode: "environment",
+              
             }}
           />
           <div className="sc_cam">

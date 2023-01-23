@@ -1,23 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./login.css";
 import bigLogo from "../../media/biglogo.jpg";
 import { borderColor, Box } from "@mui/system";
 import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector} from 'react-redux'
+import { login } from "../../feature/user/userSlice";
 
 const Login = () => {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const {loading, error, userData, isAuthenticated} = useSelector((state)=>state.userDetails)
 
     const [loginId, setLoginId] = useState("")
     const [loginPassword, setLoginPassword] = useState("")
 
+    const loginDetails = {
+      loginId,
+      loginPassword
+    }
 
     const handleLoginSubmit = (e)=>{
         e.preventDefault();
+        console.log(loginDetails.loginId);
+        console.log(loginDetails.loginPassword);
 
-        navigate('/admin/dashboard')
+        dispatch(login(loginDetails))
     }
+
+    // useEffect(()=>{
+    //   if(error){
+    //     alert(error.message)
+    //   }
+    //   if(isAuthenticated && userData.admin.role === 'admin'){
+    //     navigate('admin/dashboard')
+    //   }
+    // },[error, isAuthenticated])
 
     
 
