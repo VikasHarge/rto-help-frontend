@@ -29,14 +29,14 @@ const Login = () => {
         dispatch(login(loginDetails))
     }
 
-    // useEffect(()=>{
-    //   if(error){
-    //     alert(error.message)
-    //   }
-    //   if(isAuthenticated && userData.admin.role === 'admin'){
-    //     navigate('admin/dashboard')
-    //   }
-    // },[error, isAuthenticated])
+    useEffect(()=>{
+      if(error){
+        alert(error.message)
+      }
+      if(isAuthenticated && userData.admin.role === 'admin'){
+        navigate('admin/dashboard')
+      }
+    },[error, isAuthenticated])
 
     
 

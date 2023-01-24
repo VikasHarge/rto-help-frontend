@@ -4,20 +4,39 @@ import Webcam from "react-webcam";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Loader from  '../../utils/loader/Loader'
+
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { registerComplain } from "../../feature/complain/complainRegisterSlice";
 
 function Complain() {
+
+  const { loading, isSuccess , data, error } = useSelector((state)=> state.registerComplain )
+
+  const dispatch = useDispatch()
+
+
+
+  //To make referance with camera
   const mainCamRef = useRef(null);
   const frontCamRef = useRef(null);
 
-  const [urls, setUrls] = useState("");
+  const [registerComplainData, setRegisterComplainData] = useState({
+    name: "",
+    vehicleNumber: "",
+    phone: "",
+    description: "",
+    location: {
+      latitude: "",
+      longitude: "",
+    },
+  });
 
-  const [name, setName] = useState("");
-  const [vehicleNumber, setVehicleNumber] = useState("");
-  const [number, setNumber] = useState("");
-  const [complain, setComplain] = useState("");
-  const [long, setLong] = useState(null);
-  const [lati, setLati] = useState(null);
+  const [url1, set1] = useState("");
+  const [url2, set2] = useState("");
+  const [isReadyToSubmit, setReady] = useState(false);
+
 
   const mediaRecorderRef = useRef(null);
   const frontMediaRecorderRef = useRef(null);
@@ -31,50 +50,72 @@ function Complain() {
   const [date, setDate] = useState(new Date().toLocaleString());
   const [isVideoInfo, SetIsVideoInfo] = React.useState(false);
 
+  var durInterval = null;
+  var timeoutId = null;
+
   useEffect(() => {
     setInterval(() => {
       setDate(new Date().toLocaleString());
     }, 1000);
   }, []);
 
+  useEffect(()=>{
+    if(isSuccess){
+      console.log(data);
+    }
+    if(error){
+      console.log(error.message);
+    }
+  },[isSuccess, error])
+
+
   const handleStartCaptureClick = useCallback(() => {
-    // const img = mainCamRef.current.getScreenshot();
-    // console.log(img);
+
     setCapturing(true);
     SetIsVideoInfo(false);
     setDucration(0);
+
     durInterval = setInterval(() => {
       setDucration((prev) => prev + 1);
     }, 1000);
+
     mediaRecorderRef.current = new MediaRecorder(mainCamRef.current.stream, {
-      mimeType: "video/webm"
+      mimeType: "video/webm",
     });
-    mediaRecorderRef.current.addEventListener(
-      "dataavailable",
-      handleDataAvailable
-    );
-    mediaRecorderRef.current.start();
 
     frontMediaRecorderRef.current = new MediaRecorder(
       frontCamRef.current.stream,
       {
-        mimeType: "video/webm"
+        mimeType: "video/webm",
       }
+    );
+
+    mediaRecorderRef.current.addEventListener(
+      "dataavailable",
+      handleDataAvailable
     );
     frontMediaRecorderRef.current.addEventListener(
       "dataavailable",
       handleFrontDataAvailable
     );
+
+    mediaRecorderRef.current.start();
     frontMediaRecorderRef.current.start();
+
+    timeoutId = setTimeout(() => {
+      handleStopCapture();
+    }, 10000);
   }, [mainCamRef, setCapturing, mediaRecorderRef]);
 
+  //Data Concat Function
   const handleDataAvailable = useCallback(
     ({ data }) => {
       if (data.size > 0) {
         setRecordedChunks((prev) => prev.concat(data));
       }
-    },[setRecordedChunks]);
-
+    },
+    [setRecordedChunks]
+  );
 
   const handleFrontDataAvailable = useCallback(
     ({ data }) => {
@@ -85,71 +126,103 @@ function Complain() {
     [setFrontRecordedChunks]
   );
 
-  var durInterval = null;
-
-  const handleStopCapture = useCallback(() => {
+  const handleStopCapture = useCallback(async () => {
+    console.log("stoped capturing");
     mediaRecorderRef.current.stop();
-    frontMediaRecorderRef.current.stop();  
+    frontMediaRecorderRef.current.stop();
     setCapturing(false);
     SetIsVideoInfo(true);
     clearInterval(durInterval);
+    clearTimeout(timeoutId);
   }, [mediaRecorderRef, setCapturing]);
 
-  const handleSubmit = useCallback(() => {
+  const samplesubmit = async () => {
+    console.log("sample sumbit clicked");
+    console.log(recordedChunks.length);
+    console.log(frontRecordedChunks.length);
 
-    if (recordedChunks.length) {
-      const blob = new Blob(recordedChunks, {
-        type: "video/webm"
+    if (frontRecordedChunks.length) {
+      const frontBlob = new Blob(frontRecordedChunks, {
+        type: "video/webm",
       });
-      // console.log(recordedChunks);
+      let data3 = await new Promise((resolve, reject) => {
+        var frontBase64;
+        var frontReader = new FileReader();
+        frontReader.readAsDataURL(frontBlob);
+        frontReader.onload = () => {
+          frontBase64 = frontReader.result;
+          console.log("front", frontBase64);
+          setRegisterComplainData({
+            ...registerComplainData,
+            frontVideoUrl: frontBase64,
+          });
+          set2(frontBase64);
+        };
+        resolve(frontBase64);
+      });
+      if (recordedChunks.length) {
+        const blob = new Blob(recordedChunks, {
+          type: "video/webm",
+        });
 
-      const url = URL.createObjectURL(blob);
-
-      axios({
-        method : 'get',
-        url : url,
-        responseType : 'blob'
-      }).then(function(res){
-        var reader = new FileReader()
-        reader.readAsDataURL(res.data);
-        reader.onload = function (){
-          var base64data = reader.result
-          console.log(base64data);
-        }
-      })
-
-      // setUrls(url);
-      console.log(typeof url);
-
-
-
-      // const a = document.createElement("a");
-      // document.body.appendChild(a);
-      // a.style = "display:none";
-      // a.href = url;
-      // a.download = "";
-      // a.click();
-      window.URL.revokeObjectURL(url);
-      // console.log("new data", blob);
-      setRecordedChunks([]);
+        let data2 = await new Promise((resolve, reject) => {
+          let mainBase64;
+          var reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onload = () => {
+            mainBase64 = reader.result;
+            console.log("main", mainBase64);
+            setRegisterComplainData({
+              ...registerComplainData,
+              mainVideoUrl: mainBase64,
+            });
+            set1(mainBase64);
+          };
+          resolve(mainBase64);
+        });
+      }
     }
-    // if (frontRecordedChunks.length) {
-    //   const frontBlob = new Blob(frontRecordedChunks, {
-    //     type: "video/webm"
-    //   });
-    //   console.log(frontBlob);
-    //   const frontUrl = URL.createObjectURL(frontBlob);
 
-    //   const b = document.createElement("a");
-    //   document.body.appendChild(b);
-    //   b.style = "display:none";
-    //   b.href = frontUrl;
-    //   b.download = "front_complainer";
-    //   b.click();
-    //   window.URL.revokeObjectURL(frontUrl);
-    //   setFrontRecordedChunks([]);
-    // }
-  }, [recordedChunks, frontRecordedChunks]);
+    setRecordedChunks([]);
+    setFrontRecordedChunks([]);
+
+    setReady(true);
+  };
+
+  const submitNow = () => {
+    console.log(url1);
+    console.log(url2);
+
+    const registerComplainObj = {
+      ...registerComplainData,
+      frontVideoUrl: url1,
+      mainVideoUrl: url2,
+    };
+
+    console.log(registerComplainObj);
+
+    dispatch(registerComplain(registerComplainObj))
+
+
+
+    setRegisterComplainData({
+      name: "",
+      vehicleNumber: "",
+      phone: "",
+      description: "",
+      location: {
+        latitude: "",
+        longitude: "",
+      },
+    });
+
+    set1("");
+    set2("");
+
+
+    setReady(false);
+  };
+
 
   useEffect(() => {
     setLength(() => duration);
@@ -157,24 +230,29 @@ function Complain() {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      // console.log(position);
-      setLong(position.coords.latitude);
-      setLati(position.coords.longitude);
+      setRegisterComplainData({
+        ...registerComplainData,
+        position: {
+          ...position,
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+        },
+      });
     });
   }, []);
 
   return (
-    <div className="App">
+      <>
+     <div className="App">
       <div className="container">
         <div className="video-container">
           <Webcam
-            imageSmoothing = {true}
+            imageSmoothing={true}
             ref={mainCamRef}
             audio={false}
             videoConstraints={{
               width: 500,
               facingMode: "environment",
-              
             }}
           />
           <div className="sc_cam">
@@ -183,7 +261,7 @@ function Complain() {
               audio={false}
               videoConstraints={{
                 width: 100,
-                facingMode: "user"
+                facingMode: "user",
               }}
             />
           </div>
@@ -219,7 +297,7 @@ function Complain() {
         <Box
           component="form"
           sx={{
-            "& > :not(style)": { m: 1, width: "35ch" }
+            "& > :not(style)": { m: 1, width: "35ch" },
           }}
           noValidate
           autoComplete="off"
@@ -228,23 +306,38 @@ function Complain() {
             id="outlined-basic"
             label="Enter Full Name"
             variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={registerComplainData.name}
+            onChange={(e) =>
+              setRegisterComplainData({
+                ...registerComplainData,
+                name: e.target.value,
+              })
+            }
           />
           <TextField
             id="outlined-basic"
             label="Enter Mobile Number"
             variant="outlined"
             type="number"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
+            value={registerComplainData.phone}
+            onChange={(e) =>
+              setRegisterComplainData({
+                ...registerComplainData,
+                phone: e.target.value,
+              })
+            }
           />
           <TextField
             id="outlined-basic"
             label="Enter Vehicle Number"
             variant="outlined"
-            value={vehicleNumber}
-            onChange={(e) => setVehicleNumber(e.target.value)}
+            value={registerComplainData.vehicleNumber}
+            onChange={(e) =>
+              setRegisterComplainData({
+                ...registerComplainData,
+                vehicleNumber: e.target.value,
+              })
+            }
           />
           <TextField
             id="outlined-multiline-flexible"
@@ -252,16 +345,36 @@ function Complain() {
             variant="outlined"
             multiline
             maxRows={4}
-            value={complain}
-            onChange={(e) => setComplain(e.target.value)}
+            value={registerComplainData.description}
+            onChange={(e) =>
+              setRegisterComplainData({
+                ...registerComplainData,
+                description: e.target.value,
+              })
+            }
           />
-          <Button onClick={handleSubmit} color="success" variant="contained">
-            Submit Complain
-          </Button>
+          <div className="complain-submit-btn-div">
+            <Button
+              onClick={samplesubmit}
+              color="success"
+              variant="contained"
+              disabled={!recordedChunks.length}
+            >
+              verify details
+            </Button>
+            <Button
+              onClick={submitNow}
+              color="success"
+              variant="contained"
+              disabled={!isReadyToSubmit}
+            >
+              Submit Complain
+            </Button>
+          </div>
         </Box>
       </div>
-      {urls && <video src={urls} />}
     </div>
+    </>
   );
 }
 

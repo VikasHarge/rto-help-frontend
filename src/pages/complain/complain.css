@@ -6,12 +6,13 @@
     text-align: center;
     background-color: lightgrey;
     width: 100%;
-    height: 100vh;
+    height: 84vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     padding-top: 1rem;
+    
   }
   
   .container {
@@ -80,5 +81,13 @@
   .videoInfo {
   }
   
+
+  .complain-submit-btn-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
 
  
