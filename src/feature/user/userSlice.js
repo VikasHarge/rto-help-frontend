@@ -21,7 +21,7 @@ export const login = createAsyncThunk( 'LOGIN', async (loginDetails)=>{
     }
 
     const {data} = await axios.post(
-        'http://localhost:4002/admin/login',
+        'https://rto-help.onrender.com/admin/login',
         { adminId : loginId, password : loginPassword },
         config
     )

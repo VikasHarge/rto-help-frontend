@@ -104,7 +104,7 @@ function Complain() {
 
     timeoutId = setTimeout(() => {
       handleStopCapture();
-    }, 10000);
+    }, 40000);
   }, [mainCamRef, setCapturing, mediaRecorderRef]);
 
   //Data Concat Function
@@ -190,6 +190,12 @@ function Complain() {
   };
 
   const submitNow = () => {
+
+    if(!url1 || !url2 || !registerComplainData.description  || !registerComplainData.name || !registerComplainData.vehicleNumber || !registerComplainData.phone){
+      alert("Please Fill All Details")
+      return
+    }
+
     console.log(url1);
     console.log(url2);
 
@@ -239,143 +245,145 @@ function Complain() {
         },
       });
     });
-  }, []);
+  }, [registerComplainData.location]);
 
   return (
-      <>
-     <div className="App">
-      <div className="container">
-        <div className="video-container">
-          <Webcam
-            imageSmoothing={true}
-            ref={mainCamRef}
-            audio={false}
-            videoConstraints={{
-              width: 500,
-              facingMode: "environment",
-            }}
-          />
-          <div className="sc_cam">
-            <Webcam
-              ref={frontCamRef}
-              audio={false}
-              videoConstraints={{
-                width: 100,
-                facingMode: "user",
-              }}
-            />
-          </div>
-          <div className="timer">
-            <p>{date}</p>
-            <br />
-            <p>Video Duration : {duration} Sec</p>
-          </div>
-          <div className="btn-container">
-            {capturing ? (
-              <button
-                style={{ backgroundColor: "red" }}
-                onClick={handleStopCapture}
-              >
-                Stop Recording
-              </button>
-            ) : (
-              <button
-                style={{ backgroundColor: "green" }}
-                onClick={handleStartCaptureClick}
-              >
-                Start Recording
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="spacer"></div>
-        {isVideoInfo && (
-          <div className="videoInfo">
-            <p>✅ Video Recorded - Length : {length} Sec </p>
-          </div>
-        )}
-        <Box
-          component="form"
-          sx={{
-            "& > :not(style)": { m: 1, width: "35ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            id="outlined-basic"
-            label="Enter Full Name"
-            variant="outlined"
-            value={registerComplainData.name}
-            onChange={(e) =>
-              setRegisterComplainData({
-                ...registerComplainData,
-                name: e.target.value,
-              })
-            }
-          />
-          <TextField
-            id="outlined-basic"
-            label="Enter Mobile Number"
-            variant="outlined"
-            type="number"
-            value={registerComplainData.phone}
-            onChange={(e) =>
-              setRegisterComplainData({
-                ...registerComplainData,
-                phone: e.target.value,
-              })
-            }
-          />
-          <TextField
-            id="outlined-basic"
-            label="Enter Vehicle Number"
-            variant="outlined"
-            value={registerComplainData.vehicleNumber}
-            onChange={(e) =>
-              setRegisterComplainData({
-                ...registerComplainData,
-                vehicleNumber: e.target.value,
-              })
-            }
-          />
-          <TextField
-            id="outlined-multiline-flexible"
-            label="Complaint Discription"
-            variant="outlined"
-            multiline
-            maxRows={4}
-            value={registerComplainData.description}
-            onChange={(e) =>
-              setRegisterComplainData({
-                ...registerComplainData,
-                description: e.target.value,
-              })
-            }
-          />
-          <div className="complain-submit-btn-div">
-            <Button
-              onClick={samplesubmit}
-              color="success"
-              variant="contained"
-              disabled={!recordedChunks.length}
-            >
-              verify details
-            </Button>
-            <Button
-              onClick={submitNow}
-              color="success"
-              variant="contained"
-              disabled={!isReadyToSubmit}
-            >
-              Submit Complain
-            </Button>
-          </div>
-        </Box>
-      </div>
-    </div>
+    <>{
+      loading ? <Loader/> : <>
+      <div className="App">
+       <div className="container">
+         <div className="video-container">
+           <Webcam
+             imageSmoothing={true}
+             ref={mainCamRef}
+             audio={false}
+             videoConstraints={{
+               width: 500,
+               facingMode: "environment",
+             }}
+           />
+           <div className="sc_cam">
+             <Webcam
+               ref={frontCamRef}
+               audio={false}
+               videoConstraints={{
+                 width: 100,
+                 facingMode: "user",
+               }}
+             />
+           </div>
+           <div className="timer">
+             <p>{date}</p>
+             <br />
+             <p>Video Duration : {duration} Sec</p>
+           </div>
+           <div className="btn-container">
+             {capturing ? (
+               <button
+                 style={{ backgroundColor: "red" }}
+                 onClick={handleStopCapture}
+               >
+                 Stop Recording
+               </button>
+             ) : (
+               <button
+                 style={{ backgroundColor: "green" }}
+                 onClick={handleStartCaptureClick}
+               >
+                 Start Recording
+               </button>
+             )}
+           </div>
+         </div>
+         <div className="spacer"></div>
+         {isVideoInfo && (
+           <div className="videoInfo">
+             <p>✅ Video Recorded - Length : {length} Sec </p>
+           </div>
+         )}
+         <Box
+           component="form"
+           sx={{
+             "& > :not(style)": { m: 1, width: "35ch" },
+           }}
+           noValidate
+           autoComplete="off"
+         >
+           <TextField
+             id="outlined-basic"
+             label="Enter Full Name"
+             variant="outlined"
+             value={registerComplainData.name}
+             onChange={(e) =>
+               setRegisterComplainData({
+                 ...registerComplainData,
+                 name: e.target.value,
+               })
+             }
+           />
+           <TextField
+             id="outlined-basic"
+             label="Enter Mobile Number"
+             variant="outlined"
+             type="number"
+             value={registerComplainData.phone}
+             onChange={(e) =>
+               setRegisterComplainData({
+                 ...registerComplainData,
+                 phone: e.target.value,
+               })
+             }
+           />
+           <TextField
+             id="outlined-basic"
+             label="Enter Vehicle Number"
+             variant="outlined"
+             value={registerComplainData.vehicleNumber}
+             onChange={(e) =>
+               setRegisterComplainData({
+                 ...registerComplainData,
+                 vehicleNumber: e.target.value,
+               })
+             }
+           />
+           <TextField
+             id="outlined-multiline-flexible"
+             label="Complaint Discription"
+             variant="outlined"
+             multiline
+             maxRows={4}
+             value={registerComplainData.description}
+             onChange={(e) =>
+               setRegisterComplainData({
+                 ...registerComplainData,
+                 description: e.target.value,
+               })
+             }
+           />
+           <div className="complain-submit-btn-div">
+             <Button
+               onClick={samplesubmit}
+               color="success"
+               variant="contained"
+               disabled={!recordedChunks.length}
+             >
+               verify details
+             </Button>
+             <Button
+               onClick={submitNow}
+               color="success"
+               variant="contained"
+               disabled={!isReadyToSubmit}
+             >
+               Submit Complain
+             </Button>
+           </div>
+         </Box>
+       </div>
+     </div>
+     </>
+    }
     </>
-  );
-}
+  )}
 
 export default Complain;

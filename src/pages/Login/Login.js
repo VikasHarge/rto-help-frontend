@@ -31,7 +31,7 @@ const Login = () => {
 
     useEffect(()=>{
       if(error){
-        alert(error.message)
+        alert("Fail to login")
       }
       if(isAuthenticated && userData.admin.role === 'admin'){
         navigate('admin/dashboard')

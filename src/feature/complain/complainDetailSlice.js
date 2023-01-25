@@ -5,7 +5,7 @@ export const fetchComplainDetails = createAsyncThunk(
   "FETCH_COMPLAIN_DETAIL",
   async (complainId) => {
     const { data } = await axios.get(
-      `http://localhost:4002/complains/${complainId}`
+      `https://rto-help.onrender.com/${complainId}`
     );
     return data;
   }
@@ -20,7 +20,7 @@ export const postRemark = createAsyncThunk(
       },
     };
     const { data } = await axios.post(
-      "http://localhost:4002/complains/addRemark",
+      "https://rto-help.onrender.com/addRemark",
       { complainId, remarkValue },
       config
     );
@@ -42,7 +42,7 @@ export const postStatus = createAsyncThunk(
     };
 
     const { data } = await axios.post(
-      "http://localhost:4002/complains/changeStatus",
+      "https://rto-help.onrender.com/changeStatus",
       { complainId, statusValue },
       config
     );

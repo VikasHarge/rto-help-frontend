@@ -13,7 +13,7 @@ export const registerComplain = createAsyncThunk( "REGISTER_COMPLAIN", async (re
         }
     }
     const { data } = await axios.post(
-        'http://localhost:4002/complains/newComplain',
+        'https://rto-help.onrender.com/newComplain',
         registerComplainObj,
         config
     )
@@ -44,7 +44,7 @@ const complainRegisterSlice = createSlice({
         })
         builder.addCase(registerComplain.rejected, (state, action)=>{
             state.loading = false;
-            state.isSuccess = true;
+            state.isSuccess = false;
             state.data = action.payload;
             state.error = action.error
         })
