@@ -29,8 +29,9 @@ const ComplainDetail = () => {
 
   useEffect(() => {
     if (complainDetail !== null) {
-      setLat(complainDetail.singleComplain.cord.latitude);
-      setLong(complainDetail.singleComplain.cord.longitude);
+      console.log(complainDetail.singleComplain);
+      // setLat(complainDetail.singleComplain.cord.latitude);
+      // setLong(complainDetail.singleComplain.cord.longitude);
       setIsRemark(complainDetail.singleComplain.remark);
     }
   }, [complainDetail, isRemark]);

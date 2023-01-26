@@ -6,6 +6,7 @@ import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector} from 'react-redux'
 import { login } from "../../feature/user/userSlice";
+import Loader from "../../utils/loader/Loader";
 
 const Login = () => {
 
@@ -43,7 +44,10 @@ const Login = () => {
 
   return (
     <>
-      <div className="login-container">
+      {
+        loading ? <Loader/> : 
+        <>
+        <div className="login-container">
         <div className="login-landing">
           <img className="biglogo-img" src={bigLogo} alt="logo" />
         </div>
@@ -99,6 +103,8 @@ const Login = () => {
           </div>
         </div>
       </div>
+        </>
+      }
     </>
   );
 };
