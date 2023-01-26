@@ -27,7 +27,7 @@ function Complain() {
     vehicleNumber: "",
     phone: "",
     description: "",
-    location: {
+    cord: {
       latitude: "",
       longitude: "",
     },
@@ -187,6 +187,7 @@ function Complain() {
     setFrontRecordedChunks([]);
 
     setReady(true);
+    console.log(registerComplainData);
   };
 
   const submitNow = () => {
@@ -216,7 +217,7 @@ function Complain() {
       vehicleNumber: "",
       phone: "",
       description: "",
-      location: {
+      cord: {
         latitude: "",
         longitude: "",
       },
@@ -234,18 +235,23 @@ function Complain() {
     setLength(() => duration);
   }, [duration]);
 
-  useEffect(() => {
+  useEffect( () => {
+
     navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position.coords.longitude);
+      console.log(position.coords.latitude);
       setRegisterComplainData({
         ...registerComplainData,
-        position: {
-          ...position,
+        cord: {
           longitude: position.coords.longitude,
           latitude: position.coords.latitude,
         },
       });
+    console.log(registerComplainData);
+
     });
-  }, [registerComplainData.location]);
+
+  }, []);
 
   return (
     <>{
