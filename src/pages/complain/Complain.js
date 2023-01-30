@@ -6,9 +6,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Loader from  '../../utils/loader/Loader'
 
+
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { registerComplain } from "../../feature/complain/complainRegisterSlice";
+import Recorder from "./component/Recorder";
 
 function Complain() {
 
@@ -58,6 +60,7 @@ function Complain() {
       setDate(new Date().toLocaleString());
     }, 1000);
   }, []);
+  
 
   useEffect(()=>{
     if(isSuccess){
@@ -257,9 +260,11 @@ function Complain() {
     <>{
       loading ? <Loader/> : <>
       <div className="App">
+
        <div className="container">
          <div className="video-container">
-           <Webcam
+         <Recorder />
+           {/* <Webcam
              imageSmoothing={true}
              ref={mainCamRef}
              audio={false}
@@ -267,16 +272,16 @@ function Complain() {
                width: 500,
                facingMode: "environment",
              }}
-           />
+           /> */}
            <div className="sc_cam">
-             <Webcam
+             {/* <Webcam
                ref={frontCamRef}
                audio={false}
                videoConstraints={{
                  width: 100,
                  facingMode: "user",
                }}
-             />
+             /> */}
            </div>
            <div className="timer">
              <p>{date}</p>
