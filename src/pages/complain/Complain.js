@@ -32,8 +32,7 @@ const Complain = ()=> {
     },
   });
 
-  const [url1, set1] = useState("");
-  const [url2, set2] = useState("");
+  const [url, setUrl] = useState("");
   const [isReadyToSubmit, setReady] = useState(false);
 
 
@@ -127,7 +126,6 @@ const Complain = ()=> {
         type: "video/webm",
       });
 
-
       let mainBase64;
       var reader = new FileReader();
       reader.readAsDataURL(blob);
@@ -138,7 +136,7 @@ const Complain = ()=> {
           ...registerComplainData,
           mainVideoUrl: mainBase64,
         });
-        set1(mainBase64);
+        setUrl(mainBase64);
       };
     }
 
@@ -154,18 +152,23 @@ const Complain = ()=> {
 
     console.log(registerComplainData);
 
-    if(!url1 || !url2 || !registerComplainData.description  || !registerComplainData.name || !registerComplainData.vehicleNumber || !registerComplainData.phone){
+    console.log(registerComplainData.description);
+    console.log(registerComplainData.name);
+    console.log(registerComplainData.vehicleNumber);
+    console.log(registerComplainData.phone);
+
+
+
+    if(!url || !registerComplainData.description  || !registerComplainData.name || !registerComplainData.vehicleNumber || !registerComplainData.phone){
       alert("Please Fill All Details")
       return
     }
 
-    console.log(url1);
-    console.log(url2);
+    console.log(url);
 
     const registerComplainObj = {
       ...registerComplainData,
-      frontVideoUrl: url1,
-      mainVideoUrl: url2,
+      mainVideoUrl: url,
     };
 
     console.log(registerComplainObj);
@@ -185,10 +188,7 @@ const Complain = ()=> {
       },
     });
 
-    set1("");
-    set2("");
-
-
+    setUrl("");
     setReady(false);
   };
 
@@ -228,7 +228,7 @@ const Complain = ()=> {
              ref={mainCamRef}
              audio={false}
              videoConstraints={{
-               width: 500,
+               width: 450,
                facingMode: "environment",
              }}
            />
