@@ -9,11 +9,36 @@ import Loader from  '../../utils/loader/Loader'
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { registerComplain } from "../../feature/complain/complainRegisterSlice";
+import LoaderMsg from "../../utils/loader/LoaderMsg";
+
+//Toastify
+import { ToastContainer, toast } from "react-toastify"; 
+import 'react-toastify/dist/ReactToastify.css';
+
+
+//Material UI
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+
+
+//Popup Notification
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />
+  
+})
+
+
+
+
+
 
 function Complain() {
 
   const { loading, isSuccess , data, error } = useSelector((state)=> state.registerComplain )
-
   const dispatch = useDispatch()
 
 
@@ -23,10 +48,12 @@ function Complain() {
 
   const [registerComplainData, setRegisterComplainData] = useState({
     name: "",
-    vehicleNumber: "",
+    vehicleNumber: null,
     phone: "",
     description: "",
   });
+
+  const [submitOpen, setSubmitOpen] = useState(false)
 
 
   const [url, setUrl] = useState("");
@@ -58,10 +85,11 @@ function Complain() {
 
   useEffect(()=>{
     if(isSuccess){
-      console.log(data);
+      toast.success("Complain Submitted Successfully")
+      setSubmitOpen(true)
     }
     if(error){
-      console.log(error.message);
+      toast.error(error.message)
     }
   },[isSuccess, error])
 
@@ -154,8 +182,13 @@ function Complain() {
   const submitNow = () => {
 
     if(!url || !registerComplainData.description  || !registerComplainData.name || !registerComplainData.vehicleNumber || !registerComplainData.phone){
-      alert("Please Fill All Details")
+      toast.warning("Please fill all details")
       return
+    }
+
+    if(registerComplainData.phone.toString().length !== 10){
+      toast.warning("Please Enter Valid Phone Number");
+      return;
     }
 
     console.log(url);
@@ -207,7 +240,29 @@ function Complain() {
 
   return (
     <>{
-      loading ? <Loader/> : <>
+      loading ? <LoaderMsg msg={"Submiting Complain, Please Wait..."}/> : <>
+      <ToastContainer />
+      {
+        data && <Dialog 
+        open = {submitOpen}
+        TransitionComponent = {Transition}
+        keepMounted
+        onClose={()=>setSubmitOpen(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle >{"Complain Submited ✔️"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description" >
+            Your Complain Details
+            <br/>
+            Complain ID :- {data.complainId}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>setSubmitOpen(false)} >Ok</Button>
+        </DialogActions>
+      </Dialog>
+      }
       <div className="App">
        <div className="container">
          <div className="video-container">

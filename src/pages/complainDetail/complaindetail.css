@@ -171,3 +171,8 @@
     text-align: center;
     border-radius: 8px;
 }
+
+.video_detail_div {
+    width: 90%;
+    height: 83%;
+}

@@ -6,13 +6,13 @@
     text-align: center;
     background-color: lightgrey;
     width: 100%;
-    height: 84vh;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     padding-top: 1rem;
-    
+    padding-bottom: 1rem;
   }
   
   .container {

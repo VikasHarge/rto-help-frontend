@@ -14,6 +14,7 @@ import GoogleMap from "./GoogleMap";
 import { ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const ComplainDetail = () => {
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
@@ -70,7 +71,7 @@ const ComplainDetail = () => {
       {loading ? (
         <Loader />
       ) : (
-        <>            
+        <>          
           <div className="complain-detail-container">
             <div className="complain-detail-div">
               <button
@@ -88,7 +89,7 @@ const ComplainDetail = () => {
                 <h3 className="videopanel_header">Video proof of Incident</h3>
                 {complainDetail && (
                   <>
-                    <video width="auto" height="240" controls>
+                    <video className="video_detail_div" controls>
                       <source
                         src={complainDetail.singleComplain.mainVideoUrl}
                         type="video/webm"
