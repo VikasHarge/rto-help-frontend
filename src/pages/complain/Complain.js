@@ -6,16 +6,16 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Loader from  '../../utils/loader/Loader'
 
-
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { registerComplain } from "../../feature/complain/complainRegisterSlice";
-import Recorder from "./component/Recorder";
 
-const Complain = ()=> {
+function Complain() {
 
   const { loading, isSuccess , data, error } = useSelector((state)=> state.registerComplain )
+
   const dispatch = useDispatch()
+
 
 
   //To make referance with camera
@@ -31,6 +31,7 @@ const Complain = ()=> {
       longitude: "",
     },
   });
+
 
   const [url, setUrl] = useState("");
   const [isReadyToSubmit, setReady] = useState(false);
@@ -94,6 +95,7 @@ const Complain = ()=> {
 
 
 
+
   //Data Concat Function
   const handleDataAvailable = useCallback(
     ({ data }) => {
@@ -106,6 +108,8 @@ const Complain = ()=> {
 
 
 
+
+  // Stop Recording
   const handleStopCapture = useCallback(() => {
     console.log("stoped capturing");
     mediaRecorderRef.current.stop();
@@ -116,48 +120,39 @@ const Complain = ()=> {
   }, [mediaRecorderRef, setCapturing]);
 
 
-
-  const samplesubmit = useCallback(() => {
+  //Verify Details
+  const samplesubmit = async () => {
     console.log("sample sumbit clicked");
     console.log(recordedChunks.length);
 
-    if (recordedChunks.length) {
-      const blob = new Blob(recordedChunks, {
-        type: "video/webm",
-      });
-
-      let mainBase64;
-      var reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onload = () => {
-        mainBase64 = reader.result;
-        console.log("main", mainBase64);
-        setRegisterComplainData({
-          ...registerComplainData,
-          mainVideoUrl: mainBase64,
+      if (recordedChunks.length) {
+        const blob = new Blob(recordedChunks, {
+          type: "video/webm",
         });
-        setUrl(mainBase64);
-      };
-    }
+
+        let data2 = await new Promise((resolve, reject) => {
+          let mainBase64;
+          var reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onload = () => {
+            mainBase64 = reader.result;
+            console.log("main", mainBase64);
+            setRegisterComplainData({
+              ...registerComplainData,
+              mainVideoUrl: mainBase64,
+            });
+            setUrl(mainBase64);
+          };
+          resolve(mainBase64);
+        });
+      }
 
     setRecordedChunks([]);
     setReady(true);
     console.log(registerComplainData);
-  
-  }, [recordedChunks, setRecordedChunks, setReady])
-
-
+  };
 
   const submitNow = () => {
-
-    console.log(registerComplainData);
-
-    console.log(registerComplainData.description);
-    console.log(registerComplainData.name);
-    console.log(registerComplainData.vehicleNumber);
-    console.log(registerComplainData.phone);
-
-
 
     if(!url || !registerComplainData.description  || !registerComplainData.name || !registerComplainData.vehicleNumber || !registerComplainData.phone){
       alert("Please Fill All Details")
@@ -173,7 +168,7 @@ const Complain = ()=> {
 
     console.log(registerComplainObj);
 
-    dispatch(registerComplain(registerComplainObj))
+    // dispatch(registerComplain(registerComplainObj))
 
 
 
@@ -189,6 +184,9 @@ const Complain = ()=> {
     });
 
     setUrl("");
+    setUrl("");
+
+
     setReady(false);
   };
 
@@ -219,16 +217,14 @@ const Complain = ()=> {
     <>{
       loading ? <Loader/> : <>
       <div className="App">
-
        <div className="container">
          <div className="video-container">
-         {/* <Recorder /> */}
            <Webcam
              imageSmoothing={true}
              ref={mainCamRef}
              audio={false}
              videoConstraints={{
-               width: 450,
+               width: 500,
                facingMode: "environment",
              }}
            />
@@ -345,6 +341,5 @@ const Complain = ()=> {
     }
     </>
   )}
-  
 
 export default Complain;
