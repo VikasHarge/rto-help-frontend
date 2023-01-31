@@ -26,14 +26,13 @@ function Complain() {
     vehicleNumber: "",
     phone: "",
     description: "",
-    cord: {
-      latitude: "",
-      longitude: "",
-    },
   });
 
 
   const [url, setUrl] = useState("");
+  const [lati, setLati] = useState("")
+  const [longi, setLongi] = useState("")
+
   const [isReadyToSubmit, setReady] = useState(false);
 
 
@@ -164,12 +163,15 @@ function Complain() {
     const registerComplainObj = {
       ...registerComplainData,
       mainVideoUrl: url,
+      cord: {
+        latitude: lati,
+        longitude: longi
+      },
     };
 
     console.log(registerComplainObj);
 
-    // dispatch(registerComplain(registerComplainObj))
-
+    dispatch(registerComplain(registerComplainObj))
 
 
     setRegisterComplainData({
@@ -177,16 +179,9 @@ function Complain() {
       vehicleNumber: "",
       phone: "",
       description: "",
-      cord: {
-        latitude: "",
-        longitude: "",
-      },
     });
 
     setUrl("");
-    setUrl("");
-
-
     setReady(false);
   };
 
@@ -200,18 +195,15 @@ function Complain() {
     navigator.geolocation.getCurrentPosition((position) => {
       console.log(position.coords.longitude);
       console.log(position.coords.latitude);
-      setRegisterComplainData({
-        ...registerComplainData,
-        cord: {
-          longitude: position.coords.longitude,
-          latitude: position.coords.latitude,
-        },
-      });
-    console.log(registerComplainData);
+
+      setLati(position.coords.latitude)
+      setLongi(position.coords.longitude)
+
+      console.log(lati, longi);
 
     });
 
-  }, []);
+  }, [lati, longi]);
 
   return (
     <>{

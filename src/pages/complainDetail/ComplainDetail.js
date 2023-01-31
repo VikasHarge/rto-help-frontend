@@ -10,6 +10,10 @@ import Loader from "../../utils/loader/Loader";
 import "./complaindetail.css";
 import GoogleMap from "./GoogleMap";
 
+//Toastify
+import { ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 const ComplainDetail = () => {
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
@@ -17,7 +21,7 @@ const ComplainDetail = () => {
   const [remarkValue, setRemarkValue] = useState("");
 
   const { complainId } = useParams();
-  const { complainDetail, loading, error } = useSelector(
+  const { complainDetail, loading, error, remark } = useSelector(
     (state) => state.complainDetail
   );
   const dispatch = useDispatch();
@@ -26,6 +30,12 @@ const ComplainDetail = () => {
   useEffect(() => {
     dispatch(fetchComplainDetails(complainId));
   }, [complainId]);
+
+  useEffect(()=>{
+    toast.success("success",{
+      theme:"dark"
+    })
+  },[])
 
   useEffect(() => {
     if (complainDetail !== null) {
@@ -39,19 +49,28 @@ const ComplainDetail = () => {
   const handleSubmitRemark = () => {
     dispatch(postRemark({ complainId, remarkValue }));
     dispatch(postStatus({ complainId, statusValue: "resolve" }));
-    dispatch(fetchComplainDetails(complainId));
   };
 
   useEffect(() => {
-    console.log(error);
-  }, [error]);
+    if(error){
+      toast.error("Error Accured")
+    }
+    if(remark === 'Success'){
+      toast.success("Remark Submited Successfully")
+      dispatch(fetchComplainDetails(complainId));
+    }
+    if(remark === "Failed"){
+      toast.error("Failed to submit remark please try again")
+    }
+  }, [error, remark]);
 
   return (
     <>
+
       {loading ? (
         <Loader />
       ) : (
-        <>
+        <>            
           <div className="complain-detail-container">
             <div className="complain-detail-div">
               <button
@@ -71,13 +90,7 @@ const ComplainDetail = () => {
                   <>
                     <video width="auto" height="240" controls>
                       <source
-                        src={complainDetail.singleComplain.frontVideoUrl}
-                        type="video/webm"
-                      />
-                    </video>
-                    <video width="150" height="auto" controls>
-                      <source
-                        src={complainDetail.singleComplain.frontVideoUrl}
+                        src={complainDetail.singleComplain.mainVideoUrl}
                         type="video/webm"
                       />
                     </video>
@@ -153,9 +166,11 @@ const ComplainDetail = () => {
                 )}
               </div>
             </div>
-          </div>
+
+          </div> 
         </>
       )}
+        <ToastContainer/>  
     </>
   );
 };

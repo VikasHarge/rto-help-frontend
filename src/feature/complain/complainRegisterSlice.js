@@ -32,14 +32,13 @@ const complainRegisterSlice = createSlice({
     extraReducers : (builder)=>{
         builder.addCase(registerComplain.pending, (state, action)=>{
             state.loading = true;
-            state.isSuccess = false;
             state.data = null;
             state.error = null;
         })
         builder.addCase(registerComplain.fulfilled, (state, action)=>{
             state.loading = false;
             state.isSuccess = true;
-            state.data = false;
+            state.data = action.payload;
             state.error = null
         })
         builder.addCase(registerComplain.rejected, (state, action)=>{

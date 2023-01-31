@@ -21,6 +21,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.2",
     "react-scripts": "5.0.1",
+    "react-toastify": "^9.1.1",
     "react-video-recorder": "^3.19.4",
     "react-webcam": "^7.0.1",
     "styled-components": "^5.3.6",
