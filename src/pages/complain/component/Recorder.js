@@ -4,7 +4,7 @@ import VideoRecorder from 'react-video-recorder'
 const Recorder = () => {
   return (
     <div>
-        <h1>New Recorder new</h1>
+        <h1>New Recorder new wwwww</h1>
         <VideoRecorder 
             onRecordingComplete = {(videoBlob)=>{
                 console.log(videoBlob);

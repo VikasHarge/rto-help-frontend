@@ -12,17 +12,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerComplain } from "../../feature/complain/complainRegisterSlice";
 import Recorder from "./component/Recorder";
 
-function Complain() {
+const Complain = ()=> {
 
   const { loading, isSuccess , data, error } = useSelector((state)=> state.registerComplain )
-
   const dispatch = useDispatch()
-
 
 
   //To make referance with camera
   const mainCamRef = useRef(null);
-  const frontCamRef = useRef(null);
 
   const [registerComplainData, setRegisterComplainData] = useState({
     name: "",
@@ -41,11 +38,9 @@ function Complain() {
 
 
   const mediaRecorderRef = useRef(null);
-  const frontMediaRecorderRef = useRef(null);
 
   const [capturing, setCapturing] = React.useState(false);
   const [recordedChunks, setRecordedChunks] = React.useState([]);
-  const [frontRecordedChunks, setFrontRecordedChunks] = React.useState([]);
 
   const [duration, setDucration] = useState(0);
   const [length, setLength] = useState(0);
@@ -86,29 +81,19 @@ function Complain() {
       mimeType: "video/webm",
     });
 
-    frontMediaRecorderRef.current = new MediaRecorder(
-      frontCamRef.current.stream,
-      {
-        mimeType: "video/webm",
-      }
-    );
-
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
       handleDataAvailable
     );
-    frontMediaRecorderRef.current.addEventListener(
-      "dataavailable",
-      handleFrontDataAvailable
-    );
 
     mediaRecorderRef.current.start();
-    frontMediaRecorderRef.current.start();
 
     timeoutId = setTimeout(() => {
       handleStopCapture();
     }, 40000);
   }, [mainCamRef, setCapturing, mediaRecorderRef]);
+
+
 
   //Data Concat Function
   const handleDataAvailable = useCallback(
@@ -120,80 +105,54 @@ function Complain() {
     [setRecordedChunks]
   );
 
-  const handleFrontDataAvailable = useCallback(
-    ({ data }) => {
-      if (data.size > 0) {
-        setFrontRecordedChunks((prev) => prev.concat(data));
-      }
-    },
-    [setFrontRecordedChunks]
-  );
 
-  const handleStopCapture = useCallback(async () => {
+
+  const handleStopCapture = useCallback(() => {
     console.log("stoped capturing");
     mediaRecorderRef.current.stop();
-    frontMediaRecorderRef.current.stop();
     setCapturing(false);
     SetIsVideoInfo(true);
     clearInterval(durInterval);
     clearTimeout(timeoutId);
   }, [mediaRecorderRef, setCapturing]);
 
-  const samplesubmit = async () => {
+
+
+  const samplesubmit = useCallback(() => {
     console.log("sample sumbit clicked");
     console.log(recordedChunks.length);
-    console.log(frontRecordedChunks.length);
 
-    if (frontRecordedChunks.length) {
-      const frontBlob = new Blob(frontRecordedChunks, {
+    if (recordedChunks.length) {
+      const blob = new Blob(recordedChunks, {
         type: "video/webm",
       });
-      let data3 = await new Promise((resolve, reject) => {
-        var frontBase64;
-        var frontReader = new FileReader();
-        frontReader.readAsDataURL(frontBlob);
-        frontReader.onload = () => {
-          frontBase64 = frontReader.result;
-          console.log("front", frontBase64);
-          setRegisterComplainData({
-            ...registerComplainData,
-            frontVideoUrl: frontBase64,
-          });
-          set2(frontBase64);
-        };
-        resolve(frontBase64);
-      });
-      if (recordedChunks.length) {
-        const blob = new Blob(recordedChunks, {
-          type: "video/webm",
-        });
 
-        let data2 = await new Promise((resolve, reject) => {
-          let mainBase64;
-          var reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onload = () => {
-            mainBase64 = reader.result;
-            console.log("main", mainBase64);
-            setRegisterComplainData({
-              ...registerComplainData,
-              mainVideoUrl: mainBase64,
-            });
-            set1(mainBase64);
-          };
-          resolve(mainBase64);
+
+      let mainBase64;
+      var reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onload = () => {
+        mainBase64 = reader.result;
+        console.log("main", mainBase64);
+        setRegisterComplainData({
+          ...registerComplainData,
+          mainVideoUrl: mainBase64,
         });
-      }
+        set1(mainBase64);
+      };
     }
 
     setRecordedChunks([]);
-    setFrontRecordedChunks([]);
-
     setReady(true);
     console.log(registerComplainData);
-  };
+  
+  }, [recordedChunks, setRecordedChunks, setReady])
+
+
 
   const submitNow = () => {
+
+    console.log(registerComplainData);
 
     if(!url1 || !url2 || !registerComplainData.description  || !registerComplainData.name || !registerComplainData.vehicleNumber || !registerComplainData.phone){
       alert("Please Fill All Details")
@@ -263,8 +222,8 @@ function Complain() {
 
        <div className="container">
          <div className="video-container">
-         <Recorder />
-           {/* <Webcam
+         {/* <Recorder /> */}
+           <Webcam
              imageSmoothing={true}
              ref={mainCamRef}
              audio={false}
@@ -272,17 +231,7 @@ function Complain() {
                width: 500,
                facingMode: "environment",
              }}
-           /> */}
-           <div className="sc_cam">
-             {/* <Webcam
-               ref={frontCamRef}
-               audio={false}
-               videoConstraints={{
-                 width: 100,
-                 facingMode: "user",
-               }}
-             /> */}
-           </div>
+           />
            <div className="timer">
              <p>{date}</p>
              <br />
@@ -396,5 +345,6 @@ function Complain() {
     }
     </>
   )}
+  
 
 export default Complain;
