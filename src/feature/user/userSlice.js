@@ -14,7 +14,7 @@ export const login = createAsyncThunk( 'LOGIN', async (loginDetails)=>{
         withCredentials: true,
     }
     const {data} = await axios.post(
-        'https://rtothanecomplain.onrender.com/admin/login',
+        'https://rto-help.onrender.com/admin/login',
         { adminId : loginId, password : loginPassword },
         config
     )
@@ -26,9 +26,10 @@ export const login = createAsyncThunk( 'LOGIN', async (loginDetails)=>{
 //Loade User
 export const loadUser = createAsyncThunk('LOAD_USER', async ()=>{
     const {data} = await axios.get(
-        'https://rtothanecomplain.onrender.com/admin/me', {
+        'https://rto-help.onrender.com//admin/me', {
             headers : {
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                "Content-Type": "application/json",
             },
             withCredentials: true,
         }
@@ -38,7 +39,7 @@ export const loadUser = createAsyncThunk('LOAD_USER', async ()=>{
 
 //Logout User
 export const logout = createAsyncThunk('LOGOUT', async()=>{
-    const {data} = await axios.get('https://rtothanecomplain.onrender.com/admin/logout', {
+    const {data} = await axios.get('https://rto-help.onrender.com/admin/logout', {
         headers : {
             'Access-Control-Allow-Origin': '*'
         },
