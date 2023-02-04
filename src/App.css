@@ -1,5 +1,9 @@
 *{
   margin: 0;
+  text-decoration: none;
+}
+a{
+  color: #ffff;
 }
 .App {
   text-align: center;

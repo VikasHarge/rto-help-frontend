@@ -5,7 +5,7 @@ import axios from 'axios'
 
 //Generating action function for all complain fetch
 export const fetchAllComplains = createAsyncThunk('FETCH_COMPLAIN', async ()=>{
-        const complainData = await axios.get('https://rto-help.onrender.com/allComplains')
+        const complainData = await axios.get('https://rto-help.onrender.com/complain/allComplains')
     return complainData.data;
 } )
 

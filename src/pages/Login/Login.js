@@ -8,11 +8,17 @@ import { useDispatch, useSelector} from 'react-redux'
 import { login } from "../../feature/user/userSlice";
 import Loader from "../../utils/loader/Loader";
 
+//Toastify
+import { ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+
+
 const Login = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const {loading, error, userData, isAuthenticated} = useSelector((state)=>state.userDetails)
+    const {loading, error, userData, isAuthenticated, loginError} = useSelector((state)=>state.userDetails)
 
     const [loginId, setLoginId] = useState("")
     const [loginPassword, setLoginPassword] = useState("")
@@ -24,30 +30,44 @@ const Login = () => {
 
     const handleLoginSubmit = (e)=>{
         e.preventDefault();
+        if(!loginDetails.loginId){
+          toast.warn("Please Enter Login Id")
+          return
+        }
+        if(!loginDetails.loginPassword){
+          toast.warning("Please Enter Password")
+          return
+        }
         console.log(loginDetails.loginId);
         console.log(loginDetails.loginPassword);
 
         dispatch(login(loginDetails))
+
     }
 
     useEffect(()=>{
-      if(error){
-        alert("Fail to login")
+      if(isAuthenticated){
+        if(userData.admin.role === 'admin'){
+          toast.success("admin login sucess")
+          navigate('admin/dashboard')
+        }
       }
-      if(isAuthenticated && userData.admin.role === 'admin'){
-        navigate('admin/dashboard')
+      if(loginError){
+        toast.error("failed to login")
+        console.log(loginError);
       }
-    },[error, isAuthenticated])
+    },[isAuthenticated, loginError])
+
+
 
     
-
-
   return (
     <>
       {
         loading ? <Loader/> : 
         <>
         <div className="login-container">
+          <ToastContainer />
         <div className="login-landing">
           <img className="biglogo-img" src={bigLogo} alt="logo" />
         </div>

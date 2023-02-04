@@ -6,6 +6,13 @@ import { fetchAllComplains } from "../../feature/complain/complainSlice";
 import Loader from "../../utils/loader/Loader";
 import "./dashboard.css";
 
+//Toastify
+import { ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+
+
+
 const Dashboard = () => {
   const [complainArr, setComplainArr] = useState([]);
 
@@ -14,11 +21,11 @@ const Dashboard = () => {
 
 
   const { complainData, loading, error } = useSelector((state) => state.complain);
+  const {isAuthenticated} = useSelector((state)=>state.userDetails)
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAllComplains());
-
   }, []);
 
 
@@ -30,14 +37,21 @@ const Dashboard = () => {
   },[complainData, complainArr])
 
   useEffect(()=>{
-    console.log(error);
-  },[error])
-
+    if(error){
+      toast.error(error.messege)
+    }
+    console.log("user auth", isAuthenticated);
+    if(!isAuthenticated){
+      toast.error("unauthorise, Please Login")
+      navigate('/')
+    }
+  },[error, isAuthenticated])
 
   return (
     <>
       {
         loading ? <Loader /> : <div className="dashboard-container">
+          <ToastContainer/>
         <div className="complain-table">
           <table className="table-body">
             <thead className="table-head">

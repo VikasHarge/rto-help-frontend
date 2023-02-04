@@ -1,5 +1,5 @@
 .login-container {
-    height: 84vh;
+    height: 82vh;
     background-color: #968b89;
     display: flex;
 }
@@ -13,6 +13,7 @@
 
 .biglogo-img {
     border-radius: 2rem;
+    height: 70%;
 }
 
 .login-panel{

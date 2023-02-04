@@ -9,11 +9,24 @@ import Complain from './pages/complain/Complain';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ComplainDetail from './pages/complainDetail/ComplainDetail';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadUser } from './feature/user/userSlice';
+import { ToastContainer } from 'react-toastify';
 
 
 
 
 function App() {
+
+  const dispatch = useDispatch()
+  const {isAuthenticated, userData } = useSelector((state)=>state.userDetails)
+
+
+  useEffect(()=>{
+    console.log("loader User runs");
+    dispatch(loadUser())
+    console.log(userData);
+  },[])
 
   return (
     <>
