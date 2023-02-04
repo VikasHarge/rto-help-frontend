@@ -13,7 +13,7 @@ export const registerComplain = createAsyncThunk( "REGISTER_COMPLAIN", async (re
         }
     }
     const { data } = await axios.post(
-        'https://rto-help.onrender.com/newComplain',
+        'https://rto-help.onrender.com/complain/newComplain',
         registerComplainObj,
         config
     )
