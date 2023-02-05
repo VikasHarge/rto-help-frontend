@@ -23,7 +23,10 @@ const ComplainDetail = () => {
 
   const { complainId } = useParams();
   const { complainDetail, loading, error, remark } = useSelector(
-    (state) => state.complainDetail
+    (state) => state.complainDetail);
+
+  const { isAuthenticated } = useSelector(
+    (state) => state.userDetails
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,10 +36,11 @@ const ComplainDetail = () => {
   }, [complainId]);
 
   useEffect(()=>{
-    toast.success("success",{
-      theme:"dark"
-    })
-  },[])
+    if(!isAuthenticated){
+      toast.success("Logged Out Successfully")
+      navigate('/')
+    }
+  },[isAuthenticated])
 
   useEffect(() => {
     if (complainDetail !== null) {

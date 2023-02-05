@@ -42,7 +42,6 @@ const Dashboard = () => {
     }
     console.log("user auth", isAuthenticated);
     if(!isAuthenticated){
-      toast.error("unauthorise, Please Login")
       navigate('/')
     }
   },[error, isAuthenticated])

@@ -57,7 +57,8 @@ const userSlice = createSlice({
         userData : null,
         isAuthenticated : false,
         error : null,
-        loginError : null
+        loginError : null,
+        logoutLoading : false
     },
     extraReducers : (builder)=>{
         builder.addCase(login.pending, (state, action)=>{
@@ -98,16 +99,19 @@ const userSlice = createSlice({
         builder.addCase(logout.pending, (state, action)=>{
             state.loading = true;
             state.error = null;
+            state.logoutLoading = true;
         })
         builder.addCase(logout.fulfilled, (state, action)=>{
             state.isAuthenticated = false;
             state.loading = false;
             state.error = null;
             state.userData = null;
+            state.logoutLoading = false;
         })
         builder.addCase(logout.rejected, (state, action)=>{
             state.loading = false;
             state.error = action.error;
+            state.logoutLoading = false
         })
     }
 })
