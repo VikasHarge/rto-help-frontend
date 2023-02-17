@@ -18,7 +18,7 @@
   .container {
     box-sizing: border-box;
     border-radius: 1rem;
-    width: 90%;
+    width: fit-content;
     height: fit-content;
     border: 1px solid gray;
     background-color: #ffff;
@@ -45,9 +45,10 @@
     right: 0;
     color: red;
     font-size: 10px;
-    /* background-color: #ffff; */
+    background-color: #ffff;
     padding: 4px;
     -webkit-text-stroke: 0.1px #ffff;
+    border-radius: 0 1rem 0 1rem;
   }
   
   .btn-container {
@@ -80,7 +81,17 @@
   }
   .videoInfo {
   }
-  
+
+  .box-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .video-record_container{
+    border-radius: 1rem;
+    width: 20rem;
+  }
 
   .complain-submit-btn-div{
     display: flex;

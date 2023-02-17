@@ -26,7 +26,7 @@ export const login = createAsyncThunk( 'LOGIN', async (loginDetails)=>{
 //Loade User
 export const loadUser = createAsyncThunk('LOAD_USER', async ()=>{
     const {data} = await axios.get(
-        'https://rto-help.onrender.com//admin/me', {
+        'https://rto-help.onrender.com/admin/me', {
             headers : {
                 'Access-Control-Allow-Origin': '*',
                 "Content-Type": "application/json",

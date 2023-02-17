@@ -274,10 +274,10 @@ function Complain() {
                width: 500,
                facingMode: "environment",
              }}
+             className="video-record_container"
            />
            <div className="timer">
              <p>{date}</p>
-             <br />
              <p>Video Duration : {duration} Sec</p>
            </div>
            <div className="btn-container">
@@ -311,6 +311,7 @@ function Complain() {
            }}
            noValidate
            autoComplete="off"
+           className="box-container"
          >
            <TextField
              id="outlined-basic"

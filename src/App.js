@@ -21,7 +21,6 @@ function App() {
   const dispatch = useDispatch()
   const {isAuthenticated, userData } = useSelector((state)=>state.userDetails)
 
-
   useEffect(()=>{
     console.log("loader User runs");
     dispatch(loadUser())
